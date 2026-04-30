@@ -195,64 +195,58 @@ body {
 }
 
 .stat-cards {
-  flex-wrap: wrap;
-  /* Membuat kartu turun ke bawah jika ruang tidak cukup */
-  gap: 16px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-bottom: 32px;
+  /* Ini rahasianya: otomatis membuat kolom sesuai ruang yang ada, minimal 150px, maksimal 1fr */
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 24px;
 }
 
+/* ELEMEN KARTU */
 .stat-card {
-  /* Menentukan lebar dasar. Di layar besar akan mencoba 4 kolom */
-  flex: 1 1 calc(25% - 16px);
-  min-width: 200px;
-  /* Mencegah kartu terlalu gepeng */
   background: #fff;
-  padding: 20px;
+  padding: 16px;
+  /* Sedikit dikurangi agar pas di layar kecil */
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   display: flex;
+  flex-direction: column;
+  /* Ubah agar icon ada di atas teks, bukan di samping */
   align-items: center;
-  gap: 15px;
+  /* Tengah secara horizontal */
+  text-align: center;
+  /* Teks rata tengah */
+  gap: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  /* HAPUS SEMUA flex: 1 1 25% atau min-width di sini jika ada */
 }
 
+/* Penyesuaian Icon dan Teks dalam kartu agar lebih proporsional saat ditumpuk */
 .stat-icon {
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 28px;
-  margin-bottom: 16px;
-  background-color: #E8F5E9;
-  color: #43A047;
-}
-
-.icon-blue {
-  background-color: #E3F2FD;
-  color: #1E88E5;
-}
-
-.icon-orange {
-  background-color: #FFF3E0;
-  color: #FB8C00;
+  font-size: 24px;
+  flex-shrink: 0;
+  /* Mencegah ikon gepeng */
 }
 
 .stat-info h4 {
-  font-size: 14px;
+  font-size: 13px;
+  /* Perkecil sedikit agar muat */
   color: #666;
-  font-weight: 500;
-  margin-bottom: 10px;
+  margin: 0 0 5px 0;
+  white-space: normal;
+  /* Izinkan teks turun ke bawah jika panjang */
 }
 
 .stat-info p {
-  font-size: 36px;
+  font-size: 24px;
   font-weight: 700;
-  color: #111;
-  line-height: 1;
+  margin: 0;
 }
 
 .card-box {
@@ -637,11 +631,9 @@ body {
 }
 
 @media screen and (max-width: 768px) {
-  .stat-card {
-    flex: 1 1 100%;
-    min-width: 0;
-    /* PENTING: Mencegah kartu memaksakan lebar minimalnya */
-    width: 100%;
-    /* Memastikan lebar 100% dari container */
+  .stat-cards {
+    /* Di layar sangat kecil, paksa jadi 2 kolom agar tidak terlalu sempit */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 }

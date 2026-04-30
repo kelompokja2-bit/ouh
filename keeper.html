@@ -91,7 +91,7 @@
     const currentUserAccessId = localStorage.getItem('loggedInUserId'); 
 
     window.onload = async function() {
-      if(!currentUserAccessId) { window.location.href = "login.html"; return; }
+      if(!currentUserAccessId) { window.location.href = "index.html"; return; }
       await muatDataProfil(); await muatDataTugas();
     };
 
@@ -168,7 +168,7 @@
     }
 
     function bukaModalLogout() { document.getElementById('modalLogout').classList.add('show'); if(window.innerWidth <= 850) toggleSidebar(); }
-    function prosesLogout() { localStorage.removeItem('loggedInUserId'); window.location.href = "login.html"; }
+    function prosesLogout() { localStorage.removeItem('loggedInUserId'); window.location.href = "index.html"; }
   </script>
 </body>
 </html>

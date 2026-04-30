@@ -105,7 +105,7 @@
           <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Pembuatan akun awal (wajib lengkap) untuk mencegah data kosong di sistem.</p>
           <div class="table-container">
             <table>
-              <thead><tr><th>ID Akses (Login)</th><th>Nama Lengkap</th><th>Role</th><th>No. Telepon</th><th>Aksi</th></tr></thead>
+              <thead><tr><th>ID Akses (index)</th><th>Nama Lengkap</th><th>Role</th><th>No. Telepon</th><th>Aksi</th></tr></thead>
               <tbody id="tabel-semua-user"><tr><td colspan="5" style="text-align:center;">Memuat data...</td></tr></tbody>
             </table>
           </div>
@@ -154,7 +154,7 @@
         <select id="input-role" style="width: 100%;"><option value="Keeper">Keeper</option><option value="Koordinator">Koordinator</option></select>
       </div>
       <div class="form-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
-        <label style="width: 100%;">ID Akses Login:</label>
+        <label style="width: 100%;">ID Akses index:</label>
         <input type="text" id="input-id" style="width: 100%; text-transform: uppercase;" placeholder="Cth: KEEPER-03">
       </div>
       <div class="form-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
@@ -197,7 +197,7 @@
     const currentUserAccessId = localStorage.getItem('loggedInUserId');
 
     window.onload = async function() {
-      if(!currentUserAccessId) { window.location.href = "login.html"; return; }
+      if(!currentUserAccessId) { window.location.href = "index.html"; return; }
       await muatProfilAdmin();
       await fetchSemuaData();
     };
@@ -321,7 +321,7 @@
     }
 
     function bukaModalLogout() { document.getElementById('modalLogout').classList.add('show'); if(window.innerWidth <= 850) toggleSidebar(); }
-    function prosesLogout() { localStorage.removeItem('loggedInUserId'); window.location.href = "login.html"; }
+    function prosesLogout() { localStorage.removeItem('loggedInUserId'); window.location.href = "index.html"; }
   </script>
 </body>
 </html>

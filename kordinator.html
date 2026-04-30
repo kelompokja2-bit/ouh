@@ -187,7 +187,7 @@
     let currentCoordinatorName = '';
 
     window.onload = async function() {
-        if(!currentUserAccessId) { window.location.href = "login.html"; return; }
+        if(!currentUserAccessId) { window.location.href = "index.html"; return; }
         await muatDataProfil(); 
         await muatDaftarKeeper(); 
         await muatDataTugas();
@@ -375,7 +375,7 @@
     function tutupModalTugas() { document.getElementById('modalBuatTugas').classList.remove('show'); }
     function bukaModalLogout() { document.getElementById('modalLogout').classList.add('show'); if(window.innerWidth <= 850) toggleSidebar(); }
     function tutupModal() { document.getElementById('modalLogout').classList.remove('show'); }
-    function prosesLogout() { localStorage.removeItem('loggedInUserId'); window.location.href = "login.html"; }
+    function prosesLogout() { localStorage.removeItem('loggedInUserId'); window.location.href = "index.html"; }
   </script>
 </body>
 </html>

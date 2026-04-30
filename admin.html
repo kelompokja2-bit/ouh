@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Tugas - Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="style/admin.css">
+</head>
+<body>
+
+  <!-- Overlay untuk menutup sidebar di HP saat diklik area luar -->
+  <div class="modal-overlay" id="sidebar-overlay" onclick="toggleSidebar()" style="z-index: 999;"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div style="font-size: 28px; color:#4CAF50;"><i class="ph-fill ph-tree-palm"></i></div>
+      <div class="sidebar-title">SISTEM TUGAS<br>ORANG UTAN</div>
+    </div>
+    
+    <ul class="menu">
+      <div class="menu-category">SISTEM</div>
+      <li class="menu-item active" onclick="pindahMenu('dashboard', 'Dashboard Admin', this)">
+        <div class="menu-item-left"><i class="ph ph-squares-four menu-icon"></i> Dashboard</div>
+      </li>
+      <li class="menu-item" onclick="pindahMenu('pengguna', 'Master Pengguna', this)">
+        <div class="menu-item-left"><i class="ph ph-users menu-icon"></i> Master Pengguna</div>
+      </li>
+      <li class="menu-item" onclick="pindahMenu('tugas', 'Semua Tugas', this)">
+        <div class="menu-item-left"><i class="ph ph-clipboard-text menu-icon"></i> Semua Tugas</div>
+      </li>
+
+      <div class="menu-category">AKUN</div>
+      <li class="menu-item" onclick="pindahMenu('profil', 'Profil Admin', this)">
+        <div class="menu-item-left"><i class="ph ph-user-circle menu-icon"></i> Profil Admin</div>
+      </li>
+      <li class="menu-item logout" onclick="bukaModalLogout()">
+        <div class="menu-item-left"><i class="ph ph-sign-out menu-icon"></i> Log Out</div>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <main class="main-content">
+    
+    <header class="topbar">
+      <div class="topbar-left">
+        <!-- ICON HAMBURGER UNTUK HP -->
+        <i class="ph ph-list menu-toggle" onclick="toggleSidebar()"></i>
+        <h2 class="topbar-title" id="page-title">Dashboard Admin</h2>
+      </div>
+      <div class="topbar-right">
+        <!-- KLIK PROFIL MENUJU TAB PROFIL -->
+        <div class="user-profile-mini" onclick="pindahMenu('profil', 'Profil Admin', document.querySelectorAll('.menu-item')[3])">
+          <div class="avatar-icon" id="avatar-inisial">A</div>
+          <div class="user-info-mini">
+            <span class="user-name-mini" id="topbar-name">Memuat...</span>
+            <span class="user-role-mini">Admin Sistem</span>
+          </div>
+          <i class="ph ph-caret-down" style="color:#888; font-size:12px;"></i>
+        </div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+      
+      <!-- TAB DASHBOARD -->
+      <div id="dashboard" class="section-content active">
+        <div class="stat-cards">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#E3F2FD; color:#1E88E5;"><i class="ph-fill ph-users-three"></i></div>
+            <div class="stat-info"><h4>Total Pengguna</h4><p id="stat-total-user">0</p></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#FFF3E0; color:#FB8C00;"><i class="ph-fill ph-user-gear"></i></div>
+            <div class="stat-info"><h4>Koordinator</h4><p id="stat-koor">0</p></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#E8F5E9; color:#43A047;"><i class="ph-fill ph-binoculars"></i></div>
+            <div class="stat-info"><h4>Keeper</h4><p id="stat-keeper">0</p></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#F3E5F5; color:#8E24AA;"><i class="ph-fill ph-folder-notch-open"></i></div>
+            <div class="stat-info"><h4>Total Tugas</h4><p id="stat-tugas">0</p></div>
+          </div>
+        </div>
+
+        <div class="card-box">
+          <h3 style="margin-bottom: 10px; font-size: 18px;">Ringkasan Sistem</h3>
+          <p style="color: #666; font-size: 14px; line-height: 1.6;">Selamat datang. Anda memiliki hak akses tertinggi di sistem. Pembuatan akun Koordinator dan Keeper beserta data dasarnya harus dilakukan melalui menu <strong>Master Pengguna</strong> agar data terpusat dan valid.</p>
+        </div>
+      </div>
+
+      <!-- TAB PENGGUNA (TAMBAH / HAPUS) -->
+      <div id="pengguna" class="section-content">
+        <div class="card-box">
+          <div class="card-header">
+            <h3>Master Data Pengguna</h3>
+            <button class="btn-create-task" onclick="document.getElementById('modalTambahUser').classList.add('show');">
+              <i class="ph-bold ph-plus"></i> Tambah Pengguna
+            </button>
+          </div>
+          <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Pembuatan akun awal (wajib lengkap) untuk mencegah data kosong di sistem.</p>
+          <div class="table-container">
+            <table>
+              <thead><tr><th>ID Akses (Login)</th><th>Nama Lengkap</th><th>Role</th><th>No. Telepon</th><th>Aksi</th></tr></thead>
+              <tbody id="tabel-semua-user"><tr><td colspan="5" style="text-align:center;">Memuat data...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB SEMUA TUGAS -->
+      <div id="tugas" class="section-content">
+        <div class="card-box">
+          <h3 style="margin-bottom: 15px;">Pemantauan Seluruh Tugas</h3>
+          <div class="table-container">
+            <table>
+              <thead><tr><th>Judul Tugas</th><th>Dikerjakan (Keeper)</th><th>Dikirim (Koordinator)</th><th>Status</th><th>Tanggal</th></tr></thead>
+              <tbody id="tabel-semua-tugas"><tr><td colspan="5" style="text-align:center;">Memuat tugas...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB PROFIL ADMIN -->
+      <div id="profil" class="section-content">
+        <div class="card-box" style="max-width: 700px;">
+          <div class="form-section">
+            <h4 style="font-size:18px;">Profil Admin Sistem</h4>
+            <div class="form-row"><label>ID Sistem (Paten)</label><input type="text" id="admin-id" disabled></div>
+            <div class="form-row"><label>Nama Lengkap</label><input type="text" id="admin-nama"></div>
+            <div class="form-row"><label>Email</label><input type="email" id="admin-email"></div>
+            <div class="form-row"><label>No. Telepon</label><input type="text" id="admin-phone"></div>
+            <button class="btn-save" onclick="simpanProfilAdmin()" id="btn-simpan-profil">Simpan Profil Saya</button>
+            <div style="clear: both;"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL TAMBAH USER (Semua Wajib) -->
+  <div class="modal-overlay" id="modalTambahUser">
+    <div class="modal-box">
+      <h3 style="margin-bottom: 10px; color: #1A4D2E;">Tambah Pengguna Baru</h3>
+      <p style="font-size: 13px; color: #E53935; margin-bottom: 25px; font-weight: 500;">*Semua kolom wajib diisi sebagai data awal.</p>
+      
+      <div class="form-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+        <label style="width: 100%;">Role Akses:</label>
+        <select id="input-role" style="width: 100%;"><option value="Keeper">Keeper</option><option value="Koordinator">Koordinator</option></select>
+      </div>
+      <div class="form-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+        <label style="width: 100%;">ID Akses Login:</label>
+        <input type="text" id="input-id" style="width: 100%; text-transform: uppercase;" placeholder="Cth: KEEPER-03">
+      </div>
+      <div class="form-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+        <label style="width: 100%;">Nama Lengkap:</label>
+        <input type="text" id="input-nama" style="width: 100%;" placeholder="Cth: Budi Santoso">
+      </div>
+      <div class="form-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+        <label style="width: 100%;">Email (Opsional):</label>
+        <input type="email" id="input-email" style="width: 100%;" placeholder="opsional@orangutan.id">
+      </div>
+      <div class="form-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+        <label style="width: 100%;">No. Telepon:</label>
+        <input type="text" id="input-hp" style="width: 100%;" placeholder="Cth: 0812...">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="document.getElementById('modalTambahUser').classList.remove('show');">Batal</button>
+        <button class="btn-confirm" id="btn-simpan-user" onclick="simpanUserBaru()">Simpan Akun</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL LOGOUT -->
+  <div class="modal-overlay" id="modalLogout">
+    <div class="modal-box" style="text-align: center;">
+      <div style="font-size: 50px; margin-bottom: 16px; color:#E53935;"><i class="ph-fill ph-sign-out"></i></div>
+      <h3 style="font-size: 22px;">Yakin ingin keluar?</h3>
+      <p style="color:#666; margin-bottom: 30px; font-size:15px;">Sesi Anda akan diakhiri dari sistem.</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="document.getElementById('modalLogout').classList.remove('show');">Batal</button>
+        <button class="btn-confirm" style="background:#E53935;" onclick="prosesLogout()">Log Out</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = 'https://prcxffpetyormuzlgivn.supabase.co'; 
+    const supabaseKey = 'sb_publishable_pSCIdSEZ3AUdGhrn-eL5Eg_u6ieH2SR'; 
+    const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+    const currentUserAccessId = localStorage.getItem('loggedInUserId');
+
+    window.onload = async function() {
+      if(!currentUserAccessId) { window.location.href = "login.html"; return; }
+      await muatProfilAdmin();
+      await fetchSemuaData();
+    };
+
+    // Fungsi Buka/Tutup Sidebar di HP
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        if(sidebar.classList.contains('open')) {
+            sidebar.classList.remove('open'); overlay.classList.remove('show');
+        } else {
+            sidebar.classList.add('open'); overlay.classList.add('show');
+        }
+    }
+
+    // FUNGSI GANTI TAB YANG BENAR
+    function pindahMenu(targetId, title, elemen) {
+      document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+      if (elemen) elemen.classList.add('active');
+      
+      document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(targetId).classList.add('active');
+      
+      document.getElementById('page-title').innerText = title;
+      
+      if(window.innerWidth <= 850 && typeof toggleSidebar === 'function') {
+          toggleSidebar(); 
+      }
+    }
+
+    async function muatProfilAdmin() {
+      const { data } = await supabaseClient.from('users').select('*').eq('user_id_access', currentUserAccessId).single();
+      if (data) {
+        let displayName = (data.full_name && data.full_name.trim() !== '') ? data.full_name : 'Admin';
+        document.getElementById('topbar-name').innerText = displayName;
+        document.getElementById('avatar-inisial').innerText = displayName.charAt(0).toUpperCase();
+        document.getElementById('admin-id').value = data.user_id_access;
+        document.getElementById('admin-nama').value = data.full_name || '';
+        document.getElementById('admin-email').value = data.email || '';
+        document.getElementById('admin-phone').value = data.phone || '';
+      }
+    }
+
+    async function simpanProfilAdmin() {
+      const btn = document.getElementById('btn-simpan-profil'); btn.innerText = "Menyimpan...";
+      const { error } = await supabaseClient.from('users').update({ 
+          full_name: document.getElementById('admin-nama').value.trim(), 
+          email: document.getElementById('admin-email').value.trim(), 
+          phone: document.getElementById('admin-phone').value.trim() 
+      }).eq('user_id_access', currentUserAccessId);
+      if (!error) { alert("Profil berhasil diperbarui!"); muatProfilAdmin(); fetchSemuaData(); } 
+      else { alert("Gagal memperbarui: " + error.message); }
+      btn.innerText = "Simpan Profil Saya";
+    }
+
+    async function fetchSemuaData() {
+      const { data: usersData } = await supabaseClient.from('users').select('*').order('role', { ascending: true });
+      const { data: tasksData } = await supabaseClient.from('tasks').select('*').order('task_date', { ascending: false });
+
+      document.getElementById('stat-total-user').innerText = usersData ? usersData.length : 0;
+      document.getElementById('stat-koor').innerText = usersData ? usersData.filter(u => u.role === 'Koordinator').length : 0;
+      document.getElementById('stat-keeper').innerText = usersData ? usersData.filter(u => u.role === 'Keeper').length : 0;
+      document.getElementById('stat-tugas').innerText = tasksData ? tasksData.length : 0;
+
+      let htmlUsers = '';
+      if(usersData) {
+          usersData.forEach(user => {
+            const nama = (user.full_name && user.full_name.trim() !== '') ? user.full_name : '<i style="color:#aaa">Belum diisi</i>'; 
+            const phone = (user.phone && user.phone.trim() !== '') ? user.phone : '-';
+            
+            let btnHapus = user.role === 'Admin' ? `<span style="font-size:12px; color:#999;">Terkunci</span>` : `<button class="btn-hapus" onclick="hapusUser('${user.user_id_access}')"><i class="ph-bold ph-trash"></i> Hapus</button>`;
+            htmlUsers += `<tr><td><b>${user.user_id_access}</b></td><td>${nama}</td><td><span class="badge ${user.role}">${user.role}</span></td><td>${phone}</td><td>${btnHapus}</td></tr>`;
+          });
+      }
+      document.getElementById('tabel-semua-user').innerHTML = htmlUsers;
+
+      let htmlTugas = '';
+      if(tasksData) {
+          tasksData.forEach(task => {
+            let statusColor = task.status === 'Selesai' ? 'green' : (task.status === 'Pending' ? 'orange' : 'blue');
+            htmlTugas += `<tr><td><b>${task.title}</b></td><td>${task.keeper_id_access}</td><td>${task.coordinator_name}</td><td><span class="badge" style="background-color: var(--${statusColor}-bg, #eee); color: var(--${statusColor}-text, #333);">${task.status}</span></td><td>${task.task_date}</td></tr>`;
+          });
+      }
+      document.getElementById('tabel-semua-tugas').innerHTML = htmlTugas;
+    }
+
+    function bukaModalUser() { document.getElementById('modalTambahUser').classList.add('show'); }
+    function tutupModalUser() { document.getElementById('modalTambahUser').classList.remove('show'); }
+
+    async function simpanUserBaru() {
+      const idAkses = document.getElementById('input-id').value.trim().toUpperCase();
+      const nama = document.getElementById('input-nama').value.trim();
+      const hp = document.getElementById('input-hp').value.trim();
+      const email = document.getElementById('input-email').value.trim();
+      
+      if(!idAkses || !nama || !hp) return alert("Mohon isi ID, Nama, dan No HP untuk profil awal pengguna.");
+      
+      document.getElementById('btn-simpan-user').innerText = "Loading...";
+      const { error } = await supabaseClient.from('users').insert([{ 
+          user_id_access: idAkses, 
+          role: document.getElementById('input-role').value, 
+          full_name: nama, 
+          phone: hp,
+          email: email
+      }]);
+
+      if(!error) {
+          alert(`Akun berhasil dibuat!`);
+          document.getElementById('modalTambahUser').classList.remove('show');
+          document.getElementById('input-id').value = ''; document.getElementById('input-nama').value = ''; document.getElementById('input-hp').value = ''; document.getElementById('input-email').value = '';
+          fetchSemuaData();
+      } else { alert("Gagal. Pastikan ID Akses unik.\n" + error.message); }
+      document.getElementById('btn-simpan-user').innerText = "Simpan Akun";
+    }
+
+    async function hapusUser(idAkses) {
+        if(confirm(`Yakin ingin menghapus ${idAkses} secara permanen?`)) {
+            const { error } = await supabaseClient.from('users').delete().eq('user_id_access', idAkses);
+            if(!error) fetchSemuaData(); else alert(error.message);
+        }
+    }
+
+    function bukaModalLogout() { document.getElementById('modalLogout').classList.add('show'); if(window.innerWidth <= 850) toggleSidebar(); }
+    function prosesLogout() { localStorage.removeItem('loggedInUserId'); window.location.href = "login.html"; }
+  </script>
+</body>
+</html>

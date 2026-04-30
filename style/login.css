@@ -1,0 +1,140 @@
+  * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+  }
+
+  body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1b5e20 0%, #0a2e10 100%);
+      padding: 20px;
+  }
+
+  /* Memperbesar ukuran card login untuk laptop */
+  .login-wrapper {
+      background: #ffffff;
+      width: 100%;
+      max-width: 550px;
+      padding: 60px 50px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      text-align: center;
+  }
+
+  /* Ikon Profesional menggantikan Emoji Monyet */
+  .icon-circle {
+      width: 90px;
+      height: 90px;
+      background: #e8f5e9;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 45px;
+      color: #1b5e20;
+      margin: 0 auto 20px auto;
+  }
+
+  .login-wrapper h1 {
+      font-size: 34px;
+      color: #1b5e20;
+      font-weight: 700;
+      margin-bottom: 8px;
+  }
+
+  .login-wrapper p {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 35px;
+  }
+
+  .input-group {
+      text-align: left;
+      margin-bottom: 35px;
+  }
+
+  .input-group label {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+  }
+
+  .input-group input {
+      width: 100%;
+      padding: 18px;
+      background: #f5f7f6;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      font-size: 18px;
+      font-family: 'Poppins', sans-serif;
+      outline: none;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+  }
+
+  .input-group input:focus {
+      border-color: #43a047;
+      background: #ffffff;
+  }
+
+  .btn-login {
+      width: 100%;
+      padding: 18px;
+      background: #1b5e20;
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+  }
+
+  .btn-login:hover {
+      background: #2e7d32;
+      transform: translateY(-2px);
+  }
+
+  .error-msg {
+      color: #c62828;
+      background: #ffebee;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      margin-top: 20px;
+      display: none;
+  }
+
+  @media screen and (max-width: 600px) {
+      .login-wrapper {
+          padding: 40px 25px;
+          max-width: 100%;
+      }
+
+      .login-wrapper h1 {
+          font-size: 28px;
+      }
+
+      .login-wrapper p {
+          font-size: 14px;
+      }
+
+      .input-group input {
+          font-size: 16px;
+          padding: 15px;
+      }
+
+      .btn-login {
+          font-size: 16px;
+          padding: 15px;
+      }
+  }

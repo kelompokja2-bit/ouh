@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Orangutan Heven</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Menggunakan Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style/login.css">
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="icon-circle"><i class="ph-fill ph-tree-palm"></i></div>
+        <h1>Orangutan Heven</h1>
+        <p>Akses Sistem Manajemen Tugas</p>
+        <div class="input-group">
+            <label for="userId">ID Akses Pengguna</label>
+            <input type="text" id="userId" placeholder="Cth: ADMIN-01" autocomplete="off">
+        </div>
+        <button class="btn-login" onclick="prosesLogin()">Masuk Dashboard</button>
+        <div class="error-msg" id="errorMsg"><i class="ph-bold ph-warning"></i> ID Pengguna tidak ditemukan!</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const supabaseUrl = 'https://prcxffpetyormuzlgivn.supabase.co';
+        const supabaseKey = 'sb_publishable_pSCIdSEZ3AUdGhrn-eL5Eg_u6ieH2SR';
+        const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function prosesLogin() {
+            const inputId = document.getElementById("userId").value.trim().toUpperCase();
+            const errorMsg = document.getElementById("errorMsg");
+            const btn = document.getElementById('btn-login-action');
+
+            if (!inputId) { 
+                tampilkanError("<i class='ph-bold ph-warning-circle'></i> ID Akses tidak boleh kosong!", errorMsg); 
+                return; 
+            }
+            
+            btn.innerHTML = "<i class='ph-bold ph-spinner ph-spin'></i> Memeriksa..."; 
+            btn.disabled = true;
+
+            try {
+                const { data, error } = await supabaseClient.from('users').select('*').eq('user_id_access', inputId).single();
+                if (error) throw error;
+
+                if (data) {
+                    errorMsg.style.display = "none"; 
+                    btn.innerHTML = "<i class='ph-bold ph-check-circle'></i> Berhasil!"; 
+                    btn.style.backgroundColor = "#43a047";
+                    
+                    localStorage.setItem('loggedInUserId', data.user_id_access);
+                    
+                    setTimeout(() => {
+                        if (data.role === "Admin") window.location.href = "admin.html";
+                        else if (data.role === "Koordinator") window.location.href = "kordinator.html";
+                        else if (data.role === "Keeper") window.location.href = "keeper.html";
+                        else { tampilkanError("Role tidak dikenali.", errorMsg); resetTombol(btn); }
+                    }, 800);
+                }
+            } catch (error) {
+                tampilkanError("<i class='ph-bold ph-warning-circle'></i> ID Pengguna tidak valid!", errorMsg);
+                resetTombol(btn);
+            }
+        }
+
+        function tampilkanError(pesan, elemenPesan) {
+            elemenPesan.innerHTML = pesan; 
+            elemenPesan.style.display = "block";
+            elemenPesan.animate([{ transform: 'translateX(-10px)' }, { transform: 'translateX(10px)' }, { transform: 'translateX(0)' }], { duration: 300 });
+        }
+        
+        function resetTombol(btn) {
+            btn.innerHTML = "Masuk Dashboard <i class='ph-bold ph-arrow-right'></i>"; 
+            btn.disabled = false;
+        }
+
+        document.getElementById("userId").addEventListener("keypress", function (e) { 
+            if (e.key === "Enter") prosesLogin(); 
+        });
+    </script>
+</body>
+</html>

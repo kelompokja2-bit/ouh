@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Tugas Orang Utan - Koordinator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="style/koordinator.css">
+</head>
+<body>
+
+  <div class="modal-overlay" id="sidebar-overlay" onclick="toggleSidebar()" style="z-index: 999;"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div style="font-size: 28px; color:#4CAF50;"><i class="ph-fill ph-tree-palm"></i></div>
+      <div class="sidebar-title">SISTEM TUGAS<br>ORANG UTAN</div>
+    </div>
+    
+    <ul class="menu">
+      <div class="menu-category">TUGAS</div>
+      <li class="menu-item active" onclick="pindahMenu('dashboard', 'Dashboard Koordinator', this)">
+        <div class="menu-item-left"><i class="ph ph-squares-four menu-icon"></i> Dashboard</div>
+      </li>
+      <li class="menu-item" onclick="pindahMenu('tugas-masuk', 'Tugas Masuk', this)">
+        <div class="menu-item-left"><i class="ph ph-tray-arrow-down menu-icon"></i> Tugas Masuk</div>
+        <span class="notif-badge-menu" id="badge-menu-tugas">0</span>
+      </li>
+      <li class="menu-item" onclick="pindahMenu('riwayat-tugas', 'Riwayat Tugas', this)">
+        <div class="menu-item-left"><i class="ph ph-clock-counter-clockwise menu-icon"></i> Riwayat Tugas</div>
+      </li>
+
+      <div class="menu-category">AKUN</div>
+      <li class="menu-item" onclick="pindahMenu('profil', 'Profil Koordinator', this)">
+        <div class="menu-item-left"><i class="ph ph-user-circle menu-icon"></i> Profil Koor</div>
+      </li>
+      <li class="menu-item logout" onclick="bukaModalLogout()">
+        <div class="menu-item-left"><i class="ph ph-sign-out menu-icon"></i> Log Out</div>
+      </li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <i class="ph ph-list menu-toggle" onclick="toggleSidebar()"></i>
+        <h2 class="topbar-title" id="page-title">Dashboard Koordinator</h2>
+      </div>
+      <div class="topbar-right">
+        <div class="user-profile-mini" onclick="pindahMenu('profil', 'Profil Koordinator', document.querySelectorAll('.menu-item')[3])">
+          <div class="avatar-icon" id="avatar-inisial">K</div>
+          <div class="user-info-mini">
+            <span class="user-name-mini" id="topbar-name">Memuat...</span>
+            <span class="user-role-mini">Koordinator</span>
+          </div>
+          <i class="ph ph-caret-down" style="color:#888; font-size:12px;"></i>
+        </div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+      
+      <!-- TAB DASHBOARD -->
+      <div id="dashboard" class="section-content active">
+        <div class="stat-cards">
+          <div class="stat-card">
+            <div class="stat-icon icon-blue"><i class="ph-fill ph-tray-arrow-down"></i></div>
+            <div class="stat-info"><h4>Tugas Masuk</h4><p id="stat-masuk">0</p></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon icon-green"><i class="ph-fill ph-check-circle"></i></div>
+            <div class="stat-info"><h4>Tugas Selesai</h4><p id="stat-selesai">0</p></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon icon-orange"><i class="ph-fill ph-clock"></i></div>
+            <div class="stat-info"><h4>Tugas Pending</h4><p id="stat-pending">0</p></div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="card-box">
+            <div class="card-header">
+              <h3>Tugas Masuk Terbaru</h3>
+              <a onclick="pindahMenu('tugas-masuk', 'Tugas Masuk', document.querySelectorAll('.menu-item')[1])">Lihat Semua</a>
+            </div>
+            <ul class="task-list" id="dashboard-task-list"><p style="color: #888; font-size: 14px;">Memuat data tugas...</p></ul>
+          </div>
+          <div>
+            <div class="card-box" style="margin-bottom: 24px;">
+              <h3 style="margin-bottom: 20px;">Ringkasan Tugas</h3>
+              <div class="chart-placeholder">
+                <div class="donut" id="donut-chart"><div class="donut-inner"></div></div>
+                <div class="legend"><ul id="chart-legend"></ul></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB TUGAS MASUK (ADA TOMBOL MAGIC DISINI) -->
+      <div id="tugas-masuk" class="section-content">
+        <div class="search-bar">
+          <input type="text" placeholder="Cari tugas masuk...">
+          <select><option>Semua Status</option><option>Baru</option><option>Proses</option></select>
+          <button class="btn-magic" id="btn-demo" onclick="generateTugasDemo()"><i class="ph-bold ph-magic-wand"></i> Buat 6 Tugas Otomatis</button>
+          <button class="btn-create-task" onclick="bukaModalTugas()"><i class="ph-bold ph-plus"></i> Buat Manual</button>
+        </div>
+        <div id="list-tugas-masuk"></div>
+      </div>
+
+      <!-- TAB RIWAYAT TUGAS -->
+      <div id="riwayat-tugas" class="section-content">
+        <div class="search-bar">
+          <input type="text" placeholder="Cari riwayat tugas...">
+          <select><option>Semua Waktu</option><option>Bulan Ini</option></select>
+        </div>
+        <div id="list-riwayat-tugas"></div>
+      </div>
+
+      <!-- TAB PROFIL -->
+      <div id="profil" class="section-content">
+        <div class="profile-grid">
+          <div class="card-box profile-card">
+            <div class="avatar-icon" id="card-inisial" style="width:120px; height:120px; border-radius:50%; background:#1A4D2E; color:white; font-size:50px; display:flex; justify-content:center; align-items:center; margin:0 auto 16px;">K</div>
+            <h3 id="card-name" style="font-size: 20px;">Memuat...</h3>
+            <p style="color: #888; font-size: 14px;">Koordinator</p>
+          </div>
+          <div class="card-box">
+            <div class="form-section">
+              <h4 style="font-size: 18px;">Informasi Akun</h4>
+              <div class="form-row"><label>ID Sistem</label><input type="text" id="input-id" disabled></div>
+              <div class="form-row"><label>Nama Lengkap</label><input type="text" id="input-nama"></div>
+              <div class="form-row"><label>Email</label><input type="email" id="input-email"></div>
+              <div class="form-row"><label>No. Telepon</label><input type="text" id="input-phone"></div>
+              <button class="btn-save" onclick="simpanProfil()" id="btn-simpan">Simpan Perubahan</button>
+              <div style="clear: both;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL BUAT TUGAS MANUAL -->
+  <div class="modal-overlay" id="modalBuatTugas">
+    <div class="modal-box">
+      <h3 style="margin-bottom: 20px; color: #1A4D2E;">Buat Tugas Baru</h3>
+      <div class="form-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+        <label style="width: 100%;">Tugaskan kepada (Keeper):</label>
+        <select id="input-new-keeper" style="width: 100%;"><option value="">Memuat data...</option></select>
+      </div>
+      <div class="form-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+        <label style="width: 100%;">Judul Tugas:</label>
+        <input type="text" id="input-new-title" style="width: 100%;" placeholder="Contoh: Perbaiki Kandang C">
+      </div>
+      <div class="form-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+        <label style="width: 100%;">Deskripsi Lengkap:</label>
+        <textarea id="input-new-desc" rows="4" style="width: 100%; border:1px solid #ddd; border-radius:8px; padding:14px; outline:none; font-family:'Inter'; resize:none;"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="document.getElementById('modalBuatTugas').classList.remove('show');">Batal</button>
+        <button class="btn-confirm-green" id="btn-kirim-tugas" onclick="kirimTugasKeKeeper()">Kirim Tugas</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalLogout">
+    <div class="modal-box" style="text-align: center;">
+      <div style="font-size: 50px; margin-bottom: 16px; color:#E53935;"><i class="ph-fill ph-sign-out"></i></div>
+      <h3 style="font-size: 22px;">Yakin ingin keluar?</h3>
+      <p style="color:#666; margin-bottom: 30px;">Sesi Anda akan diakhiri dari sistem.</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="document.getElementById('modalLogout').classList.remove('show');">Batal</button>
+        <button class="btn-confirm" onclick="prosesLogout()">Log Out</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = 'https://prcxffpetyormuzlgivn.supabase.co'; 
+    const supabaseKey = 'sb_publishable_pSCIdSEZ3AUdGhrn-eL5Eg_u6ieH2SR'; 
+    const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+    const currentUserAccessId = localStorage.getItem('loggedInUserId'); 
+    let currentCoordinatorName = '';
+
+    window.onload = async function() {
+        if(!currentUserAccessId) { window.location.href = "login.html"; return; }
+        await muatDataProfil(); 
+        await muatDaftarKeeper(); 
+        await muatDataTugas();
+    };
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        if(sidebar.classList.contains('open')) { sidebar.classList.remove('open'); overlay.classList.remove('show'); } 
+        else { sidebar.classList.add('open'); overlay.classList.add('show'); }
+    }
+
+    function pindahMenu(targetId, title, elemen) {
+      document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+      if (elemen) elemen.classList.add('active');
+      document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(targetId).classList.add('active');
+      document.getElementById('page-title').innerText = title;
+      if(window.innerWidth <= 850 && typeof toggleSidebar === 'function') toggleSidebar();
+    }
+
+    async function muatDataProfil() {
+      const { data } = await supabaseClient.from('users').select('*').eq('user_id_access', currentUserAccessId).single();
+      if (data) {
+        let displayName = (data.full_name && data.full_name.trim() !== '') ? data.full_name : 'Isi Profil Anda';
+        currentCoordinatorName = displayName; 
+        document.getElementById('topbar-name').innerText = displayName;
+        document.getElementById('card-name').innerText = displayName;
+        document.getElementById('avatar-inisial').innerText = displayName.charAt(0).toUpperCase();
+        document.getElementById('card-inisial').innerText = displayName.charAt(0).toUpperCase();
+        document.getElementById('input-id').value = data.user_id_access;
+        document.getElementById('input-nama').value = data.full_name || '';
+        document.getElementById('input-email').value = data.email || '';
+        document.getElementById('input-phone').value = data.phone || '';
+      }
+    }
+
+    async function simpanProfil() {
+      const btn = document.getElementById('btn-simpan'); btn.innerText = "Menyimpan...";
+      const { error } = await supabaseClient.from('users').update({ 
+          full_name: document.getElementById('input-nama').value.trim(), 
+          email: document.getElementById('input-email').value.trim(), 
+          phone: document.getElementById('input-phone').value.trim() 
+      }).eq('user_id_access', currentUserAccessId);
+
+      if (!error) { alert("Profil diperbarui!"); await muatDataProfil(); await muatDataTugas(); } 
+      btn.innerText = "Simpan Perubahan";
+    }
+
+    // FUNGSI MEMUAT DROPDOWN KEEPER YANG LEBIH TAHAN ERROR
+    async function muatDaftarKeeper() {
+      const select = document.getElementById('input-new-keeper');
+      try {
+        const { data, error } = await supabaseClient.from('users').select('user_id_access, full_name').ilike('role', '%eeper%');
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          select.innerHTML = '<option value="">-- Silakan Pilih Keeper --</option>';
+          data.forEach(keeper => {
+            let nama = (keeper.full_name && keeper.full_name.trim() !== '') ? keeper.full_name : 'Tanpa Nama';
+            select.innerHTML += `<option value="${keeper.user_id_access}">${nama} (${keeper.user_id_access})</option>`;
+          });
+        } else {
+          select.innerHTML = '<option value="">Belum ada akun Keeper!</option>';
+        }
+      } catch (err) {
+        select.innerHTML = '<option value="">Gagal: RLS Terkunci / Tabel Kosong</option>';
+      }
+    }
+
+    async function muatDataTugas() {
+      if(!currentCoordinatorName || currentCoordinatorName === 'Isi Profil Anda') {
+          document.getElementById('dashboard-task-list').innerHTML = '<p style="color:#E53935; font-size:14px;">Silakan simpan nama profil Anda terlebih dahulu di menu AKUN -> Profil.</p>'; return;
+      }
+      const { data } = await supabaseClient.from('tasks').select('*').eq('coordinator_name', currentCoordinatorName).order('task_date', { ascending: false });
+
+      if (data) {
+        let selesai = data.filter(t => t.status === 'Selesai'); let masuk = data.filter(t => t.status !== 'Selesai'); 
+        let pendingOnly = data.filter(t => t.status === 'Pending').length; let total = data.length;
+
+        document.getElementById('stat-masuk').innerText = masuk.length;
+        document.getElementById('stat-selesai').innerText = selesai.length;
+        document.getElementById('stat-pending').innerText = pendingOnly;
+        document.getElementById('badge-menu-tugas').innerText = masuk.length;
+
+        if(total > 0) {
+            let pctSelesai = Math.round((selesai.length/total) * 100); let pctPending = Math.round((pendingOnly/total) * 100);
+            let pctBaru = Math.round(((masuk.length - pendingOnly)/total) * 100);
+            document.getElementById('donut-chart').style.background = `conic-gradient(#43A047 ${pctSelesai}%, #FB8C00 0 ${pctSelesai + pctPending}%, #1E88E5 0)`;
+            document.getElementById('chart-legend').innerHTML = `<li><div class="dot" style="background:#43A047"></div> Selesai (${pctSelesai}%)</li><li><div class="dot" style="background:#FB8C00"></div> Proses (${pctPending}%)</li><li><div class="dot" style="background:#1E88E5"></div> Baru (${pctBaru}%)</li>`;
+        }
+
+        let htmlDash = '';
+        data.slice(0,4).forEach(t => {
+            let uiStatus = t.status === 'Terkirim' ? 'Baru' : (t.status === 'Pending' ? 'Proses' : 'Selesai');
+            htmlDash += `<li class="task-item"><div class="task-desc"><h5>${t.title}</h5><p>Dari Keeper: ${t.keeper_id_access}</p></div><div class="task-meta"><span class="task-date">${t.task_date}</span><span class="badge ${uiStatus}">${uiStatus}</span></div></li>`;
+        });
+        document.getElementById('dashboard-task-list').innerHTML = htmlDash || '<p style="color:#888; font-size:14px;">Tidak ada tugas.</p>';
+
+        let htmlMasuk = '';
+        masuk.forEach(t => {
+            let uiStatus = t.status === 'Terkirim' ? 'Dilaporkan' : 'Belum Dikerjakan'; let iconBox = t.status === 'Terkirim' ? '📥' : '⏳';
+            let aksiTombol = t.status === 'Terkirim' ? `<button class="btn-action" onclick="selesaikanTugas('${t.id}')"><i class="ph-bold ph-check"></i> Tandai Selesai</button>` : `<span style="font-size:13px; color:#FB8C00; font-style:italic;">Menunggu laporan dari lapangan...</span>`;
+            htmlMasuk += `<div class="full-task-card"><div class="task-icon-large">${iconBox}</div><div class="full-task-body"><h4>${t.title}</h4><p class="koor">Keeper ID: ${t.keeper_id_access}</p><p class="desc">${t.description}</p>${aksiTombol}</div><div class="task-meta"><span class="task-date">${t.task_date}</span><span class="badge ${t.status === 'Terkirim' ? 'Baru' : 'Proses'}">${uiStatus}</span></div></div>`;
+        });
+        document.getElementById('list-tugas-masuk').innerHTML = htmlMasuk || '<p style="text-align:center; padding: 20px; color: #888;">Tidak ada tugas yang sedang berjalan.</p>';
+
+        let htmlRiwayat = '';
+        selesai.forEach(t => {
+            htmlRiwayat += `<div class="full-task-card"><div class="task-icon-large" style="background:#E8F5E9; color:#43A047;">✓</div><div class="full-task-body"><h4 style="color: #43A047;">${t.title}</h4><p class="koor">Keeper ID: ${t.keeper_id_access}</p><p class="desc">${t.description}</p></div><div class="task-meta"><span class="task-date">${t.task_date}</span><span class="badge Selesai">Selesai</span></div></div>`;
+        });
+        document.getElementById('list-riwayat-tugas').innerHTML = htmlRiwayat || '<p style="text-align:center; padding: 20px; color: #888;">Belum ada riwayat tugas.</p>';
+      }
+    }
+
+    async function kirimTugasKeKeeper() {
+      const targetKeeperId = document.getElementById('input-new-keeper').value;
+      const taskTitle = document.getElementById('input-new-title').value.trim();
+      const taskDesc = document.getElementById('input-new-desc').value.trim();
+
+      if (!targetKeeperId || !taskTitle || !taskDesc) { alert('Lengkapi form!'); return; }
+      document.getElementById('btn-kirim-tugas').innerText = "Mengirim...";
+      const { error } = await supabaseClient.from('tasks').insert([{ keeper_id_access: targetKeeperId, title: taskTitle, coordinator_name: currentCoordinatorName, description: taskDesc, status: 'Pending', task_date: new Date().toISOString().split('T')[0] }]);
+
+      if (!error) {
+        alert('Tugas terkirim!'); document.getElementById('modalBuatTugas').classList.remove('show');
+        document.getElementById('input-new-keeper').value = ''; document.getElementById('input-new-title').value = ''; document.getElementById('input-new-desc').value = '';
+        muatDataTugas();
+      } else { alert("Gagal: " + error.message); }
+      document.getElementById('btn-kirim-tugas').innerText = "Kirim Tugas";
+    }
+
+    // FUNGSI AJAIB: MEMBUAT 6 TUGAS ORANG UTAN SECARA OTOMATIS
+    async function generateTugasDemo() {
+      const btn = document.getElementById('btn-demo');
+      btn.innerHTML = '<i class="ph-bold ph-spinner"></i> Memproses...';
+      
+      try {
+        if(!currentCoordinatorName || currentCoordinatorName === 'Isi Profil Anda') {
+            alert("⚠️ Harap simpan nama Profil Anda terlebih dahulu sebelum membuat tugas!");
+            throw new Error("Profil belum diisi");
+        }
+
+        const { data: keepers, error: errK } = await supabaseClient.from('users').select('user_id_access').ilike('role', '%eeper%');
+        if (errK) throw errK;
+        
+        if (!keepers || keepers.length === 0) {
+            alert("⚠️ Gagal: Anda belum memiliki akun Keeper di database. Silakan buat minimal 1 akun Keeper di menu Admin terlebih dahulu!");
+            btn.innerHTML = '<i class="ph-bold ph-magic-wand"></i> Buat 6 Tugas Otomatis';
+            return;
+        }
+
+        // Bagi tugas ke Keeper pertama dan kedua (jika ada)
+        const k1 = keepers[0].user_id_access;
+        const k2 = keepers.length > 1 ? keepers[1].user_id_access : k1;
+
+        const tasks = [
+            { keeper_id_access: k1, title: 'Pemeriksaan Medis Krismon', coordinator_name: currentCoordinatorName, description: 'Cek suhu tubuh, detak jantung, dan asupan gizi Krismon pagi ini. Laporan segera dikirim jika ada anomali.', status: 'Pending', task_date: new Date().toISOString().split('T')[0] },
+            { keeper_id_access: k2, title: 'Sanitasi Kandang Deknong', coordinator_name: currentCoordinatorName, description: 'Bersihkan sisa makanan dan lakukan disinfeksi menyeluruh di area tidur Deknong menggunakan cairan khusus satwa.', status: 'Pending', task_date: new Date().toISOString().split('T')[0] },
+            { keeper_id_access: k1, title: 'Pemberian Vitamin Dina', coordinator_name: currentCoordinatorName, description: 'Berikan suplemen vitamin B kompleks yang dicampur ke dalam pisang dan madu untuk Dina hari ini.', status: 'Pending', task_date: new Date().toISOString().split('T')[0] },
+            { keeper_id_access: k2, title: 'Observasi Perilaku Fahzren', coordinator_name: currentCoordinatorName, description: 'Pantau interaksi sosial Fahzren di area terbuka (enclosure) selama 2 jam. Catat di jurnal jika ada tanda-tanda stres/agresif.', status: 'Pending', task_date: new Date().toISOString().split('T')[0] },
+            { keeper_id_access: k1, title: 'Perbaikan Hammock Leuser', coordinator_name: currentCoordinatorName, description: 'Tali penyangga hammock di fasilitas bermain Leuser sudah mulai putus. Segera ganti dengan tali tambang yang baru demi keamanan.', status: 'Pending', task_date: new Date().toISOString().split('T')[0] },
+            { keeper_id_access: k2, title: 'Pemberian Enrichment Lewis', coordinator_name: currentCoordinatorName, description: 'Siapkan puzzle box bambu berisi madu dan kacang untuk melatih kecerdasan dan motorik Lewis.', status: 'Pending', task_date: new Date().toISOString().split('T')[0] }
+        ];
+
+        const { error } = await supabaseClient.from('tasks').insert(tasks);
+        if (error) throw error;
+        
+        alert("✅ Berhasil! 6 Tugas untuk Krismon, Deknong, Dina, Fahzren, Leuser, dan Lewis berhasil didistribusikan ke Keeper yang ada.");
+        muatDataTugas();
+      } catch (err) {
+        if(err.message !== "Profil belum diisi") alert("Terjadi kesalahan sistem: " + err.message);
+      }
+      btn.innerHTML = '<i class="ph-bold ph-magic-wand"></i> Buat 6 Tugas Otomatis';
+    }
+
+    async function selesaikanTugas(taskId) {
+        if(confirm("Tandai tugas selesai?")) {
+            const { error } = await supabaseClient.from('tasks').update({ status: 'Selesai' }).eq('id', taskId);
+            if(!error) muatDataTugas(); 
+        }
+    }
+
+    function bukaModalTugas() { document.getElementById('modalBuatTugas').classList.add('show'); }
+    function tutupModalTugas() { document.getElementById('modalBuatTugas').classList.remove('show'); }
+    function bukaModalLogout() { document.getElementById('modalLogout').classList.add('show'); if(window.innerWidth <= 850) toggleSidebar(); }
+    function tutupModal() { document.getElementById('modalLogout').classList.remove('show'); }
+    function prosesLogout() { localStorage.removeItem('loggedInUserId'); window.location.href = "login.html"; }
+  </script>
+</body>
+</html>

@@ -102,6 +102,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .topbar {
@@ -168,7 +169,8 @@ body {
 }
 
 .content-wrapper {
-  padding: 40px;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .section-content {
@@ -203,16 +205,17 @@ body {
 }
 
 .stat-card {
-    /* Menentukan lebar dasar. Di layar besar akan mencoba 4 kolom */
-    flex: 1 1 calc(25% - 16px); 
-    min-width: 200px; /* Mencegah kartu terlalu gepeng */
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    display: flex;
-    align-items: center;
-    gap: 15px;
+  /* Menentukan lebar dasar. Di layar besar akan mencoba 4 kolom */
+  flex: 1 1 calc(25% - 16px);
+  min-width: 200px;
+  /* Mencegah kartu terlalu gepeng */
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .stat-icon {
@@ -633,8 +636,12 @@ body {
   }
 }
 
-@media screen and (max-width: 600px) {
-    .stat-card {
-        flex: 1 1 100%; /* Kartu akan memenuh lebar layar (1 kolom) */
-    }
+@media screen and (max-width: 768px) {
+  .stat-card {
+    flex: 1 1 100%;
+    min-width: 0;
+    /* PENTING: Mencegah kartu memaksakan lebar minimalnya */
+    width: 100%;
+    /* Memastikan lebar 100% dari container */
+  }
 }

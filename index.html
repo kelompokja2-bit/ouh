@@ -5,21 +5,161 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Orangutan Heven</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Menggunakan Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style/login.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        /* Layout Split Screen Utama */
+        body { 
+            display: flex; 
+            min-height: 100vh; 
+            background-color: #ffffff; 
+            overflow: hidden; /* Mencegah scroll di PC */
+        }
+        
+        /* Sisi Kiri (Branding/Warna Hijau) */
+        .split-left {
+            flex: 1.2; /* Mengambil ruang sedikit lebih besar dari kanan */
+            background: linear-gradient(135deg, #1b5e20 0%, #0a2e10 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 40px;
+            position: relative;
+        }
+
+        /* Hiasan background abstrak di sisi kiri (Opsional) */
+        .split-left::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at top left, rgba(255,255,255,0.1), transparent 50%);
+            pointer-events: none;
+        }
+
+        .brand-icon {
+            font-size: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            width: 160px; height: 160px;
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            margin-bottom: 30px;
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .brand-text h1 { font-size: 48px; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px;}
+        .brand-text p { font-size: 18px; color: rgba(255, 255, 255, 0.8); font-weight: 400;}
+
+        /* Sisi Kanan (Formulir Login) */
+        .split-right {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 40px;
+        }
+
+        .login-form-container {
+            width: 100%;
+            max-width: 480px; /* Lebar maksimal form agar rapi */
+        }
+        
+        .login-header {
+            margin-bottom: 40px;
+        }
+        
+        .login-header h2 { font-size: 32px; color: #111; font-weight: 700; margin-bottom: 10px;}
+        .login-header p { font-size: 16px; color: #666; }
+
+        .input-group { margin-bottom: 30px; }
+        .input-group label { display: block; font-size: 14px; font-weight: 600; color: #444; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #888; }
+        
+        .input-group input { 
+            width: 100%; 
+            padding: 18px 20px 18px 45px; /* Padding kiri lebih besar untuk icon */
+            background: #f8f9fa; 
+            border: 2px solid #e9ecef; 
+            border-radius: 12px; 
+            font-size: 16px; 
+            font-family: 'Poppins', sans-serif; 
+            outline: none; 
+            transition: all 0.3s ease; 
+            text-transform: uppercase; 
+        }
+        
+        .input-group input:focus { border-color: #4CAF50; background: #ffffff; box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);}
+        
+        .btn-login { 
+            width: 100%; 
+            padding: 18px; 
+            background: #1b5e20; 
+            color: #ffffff; 
+            border: none; 
+            border-radius: 12px; 
+            font-size: 16px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
+        .btn-login:hover { background: #2e7d32; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(46, 125, 50, 0.2); }
+        
+        .error-msg { color: #d32f2f; background: #ffebee; padding: 15px; border-radius: 8px; font-size: 14px; font-weight: 500; margin-top: 20px; display: none; border-left: 4px solid #d32f2f;}
+
+        /* Responsive Mobile */
+        @media screen and (max-width: 900px) {
+            body { flex-direction: column; overflow-y: auto;}
+            .split-left { flex: none; padding: 60px 20px; text-align: center; }
+            .brand-icon { width: 100px; height: 100px; font-size: 40px; margin-bottom: 20px; }
+            .brand-text h1 { font-size: 32px; }
+            .split-right { flex: none; padding: 40px 20px; }
+            .login-header h2 { font-size: 28px; }
+        }
+    </style>
 </head>
 <body>
-    <div class="login-wrapper">
-        <div class="icon-circle"><i class="ph-fill ph-tree-palm"></i></div>
-        <h1>Orangutan Heven</h1>
-        <p>Akses Sistem Manajemen Tugas</p>
-        <div class="input-group">
-            <label for="userId">ID Akses Pengguna</label>
-            <input type="text" id="userId" placeholder="Cth: ADMIN-01" autocomplete="off">
+
+    <!-- Sisi Kiri: Branding -->
+    <div class="split-left">
+        <div class="brand-icon">
+            <i class="ph-fill ph-tree-palm"></i>
         </div>
-        <button class="btn-login" onclick="prosesLogin()">Masuk Dashboard</button>
-        <div class="error-msg" id="errorMsg"><i class="ph-bold ph-warning"></i> ID Pengguna tidak ditemukan!</div>
+        <div class="brand-text">
+            <h1>Orangutan Heven</h1>
+            <p>Sistem Manajemen Tugas & Laporan Keeper</p>
+        </div>
+    </div>
+
+    <!-- Sisi Kanan: Form Login -->
+    <div class="split-right">
+        <div class="login-form-container">
+            <div class="login-header">
+                <h2>Selamat Datang</h2>
+                <p>Silakan masukkan ID Akses Anda untuk melanjutkan ke sistem.</p>
+            </div>
+
+            <div class="input-group">
+                <label for="userId">ID Akses Pengguna</label>
+                <div class="input-wrapper">
+                    <i class="ph-bold ph-identification-card"></i>
+                    <input type="text" id="userId" placeholder="Cth: ADMIN-01" autocomplete="off">
+                </div>
+            </div>
+
+            <button class="btn-login" id="btn-login-action" onclick="prosesLogin()">
+                Masuk Dashboard <i class="ph-bold ph-arrow-right"></i>
+            </button>
+            
+            <div class="error-msg" id="errorMsg">
+                <i class="ph-bold ph-warning-circle" style="vertical-align: middle;"></i> ID Pengguna tidak ditemukan di database!
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
